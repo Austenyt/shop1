@@ -23,15 +23,14 @@ def category_goods(request, pk):
     category_item = Category.objects.get(pk=pk)
     context = {
         'object_list': Product.objects.filter(category_id=pk),
-        'title': f'Товары - {category_item.name}'
+        'title': f'Категория - {category_item.name}'
     }
     return render(request, 'goods/categories.html', context)
 
 
-def products_goods(request, pk):
-    product_item = Product.objects.get(pk=pk)
+def products_goods(request):
     context = {
-        'object_list': Product.objects.filter(category_id=pk),
-        'title': f'{product_item.name}'
+        'object_list': Product.objects.filter(),
+        'title': f'Продукт'
     }
     return render(request, 'goods/products.html', context)
