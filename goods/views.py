@@ -11,7 +11,7 @@ def index(request):
     return render(request, 'goods/index.html', context)
 
 
-def contact(request):
+def contacts(request):
     if request.method == 'POST':
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -21,7 +21,7 @@ def contact(request):
     context = {
         'title': 'Контакты'
     }
-    return render(request, 'goods/contact.html', context)
+    return render(request, 'goods/contacts.html', context)
 
 
 def categories(request):
@@ -41,9 +41,8 @@ def category_goods(request, pk):
     return render(request, 'goods/categories.html', context)
 
 
-def products_goods(request, pk):
+def product(request):
     context = {
-        'object': Product.objects.get(pk=pk),
-        'title': f'Продукт'
+        # 'object': Product.objects.get(pk=pk),
     }
     return render(request, 'goods/product.html', context)
