@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 
 from goods.models import Category, Product
 
@@ -41,8 +41,6 @@ def category_goods(request, pk):
     return render(request, 'goods/categories.html', context)
 
 
-def product(request):
-    context = {
-        # 'object': Product.objects.get(pk=pk),
-    }
-    return render(request, 'goods/product.html', context)
+def product(request, pk):
+    product_item = get_object_or_404(Product, pk=pk)
+    return render(request, 'goods/product.html', {'product': product_item})
