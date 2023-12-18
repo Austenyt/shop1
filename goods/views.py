@@ -36,9 +36,9 @@ def category_goods(request, pk):
     category_item = Category.objects.get(pk=pk)
     context = {
         'object_list': Product.objects.filter(category_id=pk),
-        'title': f'Категория - {category_item.name}'
+        'title': f'Категория с товарами - {category_item.name}'
     }
-    return render(request, 'goods/categories.html', context)
+    return render(request, 'goods/products.html', context)
 
 
 def product(request, pk):
