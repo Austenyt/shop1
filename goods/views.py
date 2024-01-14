@@ -1,14 +1,20 @@
 from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView
 
 from goods.models import Category, Product
 
 
-def index(request):
-    context = {
-        'object_list': Category.objects.all()[:3],
-        'title': 'Магазин для фанатов кантри'
-    }
-    return render(request, 'goods/index.html', context)
+class CategoriesListView(ListView):
+    model = Product
+    template_name = 'goods/index.html'
+
+
+# def index(request):
+#     context = {
+#         'object_list': Category.objects.all()[:3],
+#         'title': 'Магазин для фанатов кантри'
+#     }
+#     return render(request, 'goods/index.html', context)
 
 
 def contacts(request):
