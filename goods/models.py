@@ -31,14 +31,17 @@ class Product(models.Model):
         verbose_name_plural = 'Товары'
 
 
-class BlogPost(models.Model):
-    title = models.CharField(max_length=100)
-    slug = models.SlugField(unique=True)
-    content = models.TextField()
+class Blog(models.Model):
+    title = models.CharField(max_length=150, verbose_name='название')
+    body = models.TextField(verbose_name='содержимое')
+
+    views_count = models.IntegerField(default=0, verbose_name='просмотры')
+    is_published = models.BooleanField(default=True, verbose_name='опубликовано')
+    slug = models.CharField(max_length=150, verbose_name='slug', null=True, blank=True)
     preview = models.ImageField(upload_to='blog_previews/')
     created_at = models.DateTimeField(auto_now_add=True)
-    published = models.BooleanField(default=False)
-    views = models.IntegerField(default=0)
+
+
 
     def __str__(self):
         return self.title

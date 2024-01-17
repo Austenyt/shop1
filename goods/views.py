@@ -1,9 +1,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.utils.text import slugify
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, TemplateView
+from django.views.generic import ListView, CreateView, UpdateView, TemplateView, DeleteView, DetailView
 
-from goods.models import Category, Product, BlogPost
+from goods.models import Category, Product, Blog
 
 
 class IndexView(TemplateView):
@@ -77,22 +78,39 @@ class CategoryListView(ListView):
 #     return render(request, 'goods/product_list.html', context)
 
 
-class ProductListView(ListView):
-    model = Product
-
-    def get_queryset(self):
-        queryset = super().get_queryset()
-        queryset = queryset.filter(category_id=self.kwargs.get('pk'))
-        return queryset
+class CategoryDetailView(DetailView):
+    model = Category
 
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)
 
-        category_item = Category.objects.get(pk=self.kwargs.get('pk'))
-        context_data['category_pk'] = category_item.pk,
-        context_data['title'] = f'Категория с товарами - {category_item.name}'
+        product_items = Product.objects.filter(category=self.object)
+        context_data['product_items'] = product_items
+        context_data['title'] = f'Категория с товарами - {self.object.name}'
 
         return context_data
+
+
+class ProductListView(ListView):
+    model = Product
+
+
+class ProductDetailView(DetailView):
+    model = Product
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     queryset = queryset.filter(category_id=self.kwargs.get('pk'))
+    #     return queryset
+
+    # def get_context_data(self, *args, **kwargs):
+    #     context_data = super().get_context_data(*args, **kwargs)
+    #
+    #     category_item = Category.objects.get(pk=self.kwargs.get('pk'))
+    #     context_data['category_pk'] = category_item.pk,
+    #     context_data['title'] = f'Категория с товарами - {category_item.name}'
+
+        # return context_data
 
 
 class ProductCreateView(CreateView):
@@ -109,19 +127,55 @@ class ProductUpdateView(UpdateView):
         return reverse('goods:category', args=[self.object.category.pk])
 
 
-class ProductDeleteView(UpdateView):
+class ProductDeleteView(DeleteView):
     model = Product
     successful_url = reverse_lazy('goods:categories')
 
 # def product(request, pk):
 #     product_item = get_object_or_404(Product, pk=pk)
-#     return render(request, 'goods/product.html', {'product': product_item})
+#     return render(request, 'goods/product_detail.html', {'product': product_item})
 
 
 class BlogListView(ListView):
-    model = BlogPost
+    model = Blog
     template_name = 'blog/blog_list.html'
     context_object_name = 'posts'
 
     def get_queryset(self):
-        return BlogPost.objects.filter(published=True)
+        return Blog.objects.filter(is_published=True)
+
+
+class BlogDetailView(DetailView):
+    model = Blog
+
+    def get_object(self, queryset=None):
+        self.object = super().get_object(queryset)
+        self.object.views_count += 1
+        self.object.save()
+
+        return self.object
+
+
+class BlogCreateView(CreateView):
+    model = Blog
+    fields = ('title', 'body',)
+    success_url = reverse_lazy('goods:product_')
+
+    def form_valid(self, form):
+        if form.is_valid():
+            new_blog = form.save()
+            new_blog.slug = slugify(new_blog.title)
+            new_blog.save()
+        return super().form_valid(form)
+
+
+class BlogUpdateView(CreateView):
+    model = Blog
+    success_url = reverse_lazy('goods:index')
+
+    def form_valid(self, form):
+        if form.is_valid():
+            new_blog = form.save()
+            new_blog.slug = slugify(new_blog.title)
+            new_blog.save()
+        return super().form_valid(form)
