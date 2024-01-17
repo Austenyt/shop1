@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from goods.models import Category, Product
+from goods.models import Category, Product, BlogPost
 
 
 @admin.register(Category)
@@ -13,3 +13,10 @@ class ProductAdmin(admin.ModelAdmin):
     list_display = ('pk', 'name', 'price', 'category',)
     list_filter = ('category',)
     search_fields = ('name', 'description',)
+
+
+@admin.register(BlogPost)
+class BlogPostAdmin(admin.ModelAdmin):
+    list_display = ('title', 'slug', 'created_at', 'published')
+    list_filter = ('created_at', 'published')
+    search_fields = ('title', 'content')

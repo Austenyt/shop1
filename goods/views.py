@@ -1,29 +1,56 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
-from django.views.generic import ListView, CreateView, UpdateView
+from django.views import View
+from django.views.generic import ListView, CreateView, UpdateView, TemplateView
 
-from goods.models import Category, Product
+from goods.models import Category, Product, BlogPost
 
 
-def index(request):
-    context = {
-        'object_list': Category.objects.all()[:3],
+class IndexView(TemplateView):
+    template_name = 'goods/index.html'
+    extra_context = {
         'title': 'Магазин для фанатов кантри'
     }
-    return render(request, 'goods/index.html', context)
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        context_data['object_list'] = Category.objects.all()[:3]
+        return context_data
 
 
-def contacts(request):
-    if request.method == 'POST':
+# def index(request):
+#     context = {
+#         'object_list': Category.objects.all()[:3],
+#         'title': 'Магазин для фанатов кантри'
+#     }
+#     return render(request, 'goods/index.html', context)
+
+class ContactsView(View):
+    template_name = 'goods/contacts.html'
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, {'title': 'Контакты'})
+
+    def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
         email = request.POST.get('email')
         message = request.POST.get('message')
         print(f'{name} ({email}): {message}')
 
-    context = {
-        'title': 'Контакты'
-    }
-    return render(request, 'goods/contacts.html', context)
+        return render(request, self.template_name, {'title': 'Контакты'})
+
+
+# def contacts(request):
+#     if request.method == 'POST':
+#         name = request.POST.get('name')
+#         email = request.POST.get('email')
+#         message = request.POST.get('message')
+#         print(f'{name} ({email}): {message}')
+#
+#     context = {
+#         'title': 'Контакты'
+#     }
+#     return render(request, 'goods/contacts.html', context)
 
 
 # def categories(request):
@@ -31,7 +58,7 @@ def contacts(request):
 #         'object_list': Category.objects.all(),
 #         'title': 'Категории'
 #     }
-#     return render(request, 'goods/categories.html', context)
+#     return render(request, 'goods/category_list.html', context)
 
 
 class CategoryListView(ListView):
@@ -47,7 +74,7 @@ class CategoryListView(ListView):
 #         'object_list': Product.objects.filter(category_id=pk),
 #         'title': f'Категория с товарами - {category_item.name}'
 #     }
-#     return render(request, 'goods/products.html', context)
+#     return render(request, 'goods/product_list.html', context)
 
 
 class ProductListView(ListView):
@@ -89,3 +116,12 @@ class ProductDeleteView(UpdateView):
 # def product(request, pk):
 #     product_item = get_object_or_404(Product, pk=pk)
 #     return render(request, 'goods/product.html', {'product': product_item})
+
+
+class BlogListView(ListView):
+    model = BlogPost
+    template_name = 'blog/blog_list.html'
+    context_object_name = 'posts'
+
+    def get_queryset(self):
+        return BlogPost.objects.filter(published=True)
