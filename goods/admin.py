@@ -16,7 +16,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(Blog)
-class BlogPostAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'created_at', 'published')
-    list_filter = ('created_at', 'published')
+class BlogAdmin(admin.ModelAdmin):
+    list_display = ('title', 'slug', 'created_at', 'is_published')
+    list_filter = ('created_at', 'is_published')
     search_fields = ('title', 'content')
