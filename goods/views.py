@@ -182,3 +182,8 @@ class BlogDetailView(DetailView):
         self.object.views_count += 1
         self.object.save()
         return self.object
+
+
+class BlogDeleteView(DeleteView):
+    model = Blog
+    success_url = reverse_lazy('goods:blog_list')
