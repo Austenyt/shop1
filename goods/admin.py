@@ -19,4 +19,4 @@ class ProductAdmin(admin.ModelAdmin):
 class BlogAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'created_at', 'is_published')
     list_filter = ('created_at', 'is_published')
-    search_fields = ('title', 'content')
+    search_fields = ('title', 'body')
