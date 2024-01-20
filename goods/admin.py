@@ -15,8 +15,8 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ('name', 'description',)
 
 
-@admin.register(Blog)
-class BlogAdmin(admin.ModelAdmin):
-    list_display = ('title', 'slug', 'created_at', 'is_published')
-    list_filter = ('created_at', 'is_published')
-    search_fields = ('title', 'body')
+# @admin.register(Blog)
+# class BlogAdmin(admin.ModelAdmin):
+#     list_display = ('title', 'slug', 'created_at', 'is_published')
+#     list_filter = ('created_at', 'is_published')
+#     search_fields = ('title', 'body')
