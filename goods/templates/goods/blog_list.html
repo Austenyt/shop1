@@ -1,7 +1,7 @@
 {% extends 'goods/base.html' %}
 {% block content %}
 <div class="col-12 mb-5">
-    <a class="btn btn-outline-primary" href="{% url 'goods:blog_create' %}">Добавить блог</a>
+    <a class="btn btn-outline-primary" href="{% url 'goods:blog_create' %}">Добавить запись</a>
 </div>
 {% for object in object_list %}
 <div class="col-md-4">
@@ -14,7 +14,7 @@
                 <div class="btn-group">
                     <a href="{% url 'goods:blog_view' object.pk %}"
                        class="btn btn-sm btn-outline-secondary">Смотреть</a>
-                    <a href="{% url 'goods:blog_edit' object.pk %}" type="button"
+                    <a href="{% url 'goods:blog_update' object.pk %}" type="button"
                        class="btn btn-sm btn-outline-secondary">Редактировать</a>
                     <a href="{% url 'goods:blog_delete' object.pk %}" type="button"
                        class="btn btn-sm btn-outline-secondary">Удалить</a>

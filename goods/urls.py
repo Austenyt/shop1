@@ -18,9 +18,9 @@ urlpatterns = [
     path('goods/create', ProductCreateView.as_view(), name='product_create'),
     path('goods/update/<int:pk>/', ProductUpdateView.as_view(), name='product_update'),
     path('goods/delete/<int:pk>/', ProductDeleteView.as_view(), name='product_delete'),
-    path('blog_create/', BlogCreateView.as_view(), name='blog_create'),
-    path('blog_edit/<int:pk>/', BlogUpdateView.as_view(), name='blog_edit'),
     path('blog_list', BlogListView.as_view(), name='blog_list'),
     path('blog_view/<int:pk>/', BlogDetailView.as_view(), name='blog_view'),
+    path('goods/blog_create/', BlogCreateView.as_view(), name='blog_create'),
+    path('goods/blog_update/<int:pk>/', BlogUpdateView.as_view(), name='blog_update'),
     path('blog_delete/<int:pk>/', BlogDeleteView.as_view(), name='blog_delete'),
 ]
