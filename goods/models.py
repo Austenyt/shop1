@@ -44,5 +44,5 @@ class Blog(models.Model):
         return self.title
 
     class Meta:
-        verbose_name = 'Блог'
-        verbose_name_plural = 'Блоги'
+        verbose_name = 'Запись'
+        verbose_name_plural = 'Записи'
