@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.utils.text import slugify
 from django.views import View
@@ -149,10 +149,10 @@ class BlogCreateView(CreateView):
         return super().form_valid(form)
 
 
-class BlogUpdateView(CreateView):
+class BlogUpdateView(UpdateView):
     model = Blog
     fields = ('title', 'body', 'preview',)
-    success_url = reverse_lazy('goods:blog_list')
+    # success_url = reverse_lazy('goods:blog_view')
 
     def form_valid(self, form):
         if form.is_valid():
@@ -161,8 +161,8 @@ class BlogUpdateView(CreateView):
             new_blog.save()
         return super().form_valid(form)
 
-    # def get_success_url(self):
-    #     return reverse('goods:blog_view', args=[self.kwargs.get('pk')])
+    def get_success_url(self):
+        return reverse('goods:blog_view', args=[self.kwargs.get('pk')])
 
 
 class BlogListView(ListView):
@@ -187,3 +187,15 @@ class BlogDetailView(DetailView):
 class BlogDeleteView(DeleteView):
     model = Blog
     success_url = reverse_lazy('goods:blog_list')
+
+
+def toggle_activity(request, pk):
+    blog_item = get_object_or_404(Blog, pk=pk)
+    if blog_item.is_active:
+        blog_item.is_active = False
+    else:
+        blog_item.is_active = True
+
+    blog_item.save()
+
+    return redirect(reverse('goods:index'))
