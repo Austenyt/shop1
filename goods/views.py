@@ -138,7 +138,7 @@ class ProductDeleteView(DeleteView):
 
 class BlogCreateView(CreateView):
     model = Blog
-    fields = ('title', 'body', 'preview',)
+    fields = ('title', 'body', 'preview', 'is_published',)
     success_url = reverse_lazy('goods:blog_list')
 
     def form_valid(self, form):
@@ -151,7 +151,7 @@ class BlogCreateView(CreateView):
 
 class BlogUpdateView(UpdateView):
     model = Blog
-    fields = ('title', 'body', 'preview',)
+    fields = ('title', 'body', 'preview', 'is_published',)
     # success_url = reverse_lazy('goods:blog_view')
 
     def form_valid(self, form):
@@ -188,14 +188,3 @@ class BlogDeleteView(DeleteView):
     model = Blog
     success_url = reverse_lazy('goods:blog_list')
 
-
-def toggle_activity(request, pk):
-    blog_item = get_object_or_404(Blog, pk=pk)
-    if blog_item.is_active:
-        blog_item.is_active = False
-    else:
-        blog_item.is_active = True
-
-    blog_item.save()
-
-    return redirect(reverse('goods:index'))
