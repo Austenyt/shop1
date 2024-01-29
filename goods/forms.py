@@ -11,24 +11,21 @@ class StyleFormMixin:
 
 
 class ProductForm(StyleFormMixin, forms.ModelForm):
-
     class Meta:
         model = Product
-        # fields = '__all__'
-        fields = ('first_name', 'last_name', 'avatar', 'email',)
-        # exclude = ('is_active',)
+        fields = '__all__'
 
-    def clean_email(self):
-        cleaned_data = self.cleaned_data['email']
+    def clean_product(self):
+        cleaned_data = self.cleaned_data['product']
 
-        if 'sky.pro' not in cleaned_data:
-            raise forms.ValidationError('Почта должна относиться к учебному заведению')
+        if ('казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция',
+            'радар',) in cleaned_data:
+            raise forms.ValidationError('Данный продукт запрещен к добавлению')
 
         return cleaned_data
 
 
 class SubjectForm(StyleFormMixin, forms.ModelForm):
-
     class Meta:
         model = Subject
         fields = '__all__'

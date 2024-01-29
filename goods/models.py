@@ -46,3 +46,17 @@ class Blog(models.Model):
     class Meta:
         verbose_name = 'Запись'
         verbose_name_plural = 'Записи'
+
+
+class Version(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    version =
+    version_name = models.CharField(max_length=250, verbose_name='Кличка')
+    birth_day = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Запись'
+        verbose_name_plural = 'Записи'
