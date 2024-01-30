@@ -1,6 +1,6 @@
 from django import forms
 
-from goods.models import Product
+from goods.models import Product, Version
 
 
 class StyleFormMixin:
@@ -9,20 +9,6 @@ class StyleFormMixin:
         for field_name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
 
-
-# class ProductForm(StyleFormMixin, forms.ModelForm):
-#     class Meta:
-#         model = Product
-#         fields = '__all__'
-#
-#     def clean_product(self):
-#         cleaned_data = self.cleaned_data['product']
-#
-#         if ('казино', 'криптовалюта', 'крипта', 'биржа', 'дешево', 'бесплатно', 'обман', 'полиция',
-#             'радар',) in cleaned_data:
-#             raise forms.ValidationError('Данный продукт запрещен к добавлению')
-#
-#         return cleaned_data
 
 class ProductForm(StyleFormMixin, forms.ModelForm):
     class Meta:
@@ -36,7 +22,7 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
 
         for word in prohibited_words:
             if word in cleaned_data.lower():
-                raise forms.ValidationError(f"The word '{word}' is not allowed in the name.")
+                raise forms.ValidationError(f"Слово '{word}' недопустимо для использования в названии.")
         return cleaned_data
 
     def clean_description(self):
@@ -45,7 +31,11 @@ class ProductForm(StyleFormMixin, forms.ModelForm):
         description = self.cleaned_data['description']
         for word in prohibited_words:
             if word in description.lower():
-                raise forms.ValidationError(f"The word '{word}' is not allowed in the description.")
+                raise forms.ValidationError(f"Слово '{word}' недопустимо для использования в описании.")
         return description
 
 
+class VersionForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Version
+        fields = '__all__'
