@@ -117,13 +117,12 @@ class ProductDetailView(DetailView):
 
 class ProductCreateView(CreateView):
     model = Product
-    fields = ('name', 'category',)
-    successful_url = reverse_lazy('goods:categories')
+    form_class = ProductForm
+    success_url = reverse_lazy('goods:index')
 
 
 class ProductUpdateView(UpdateView):
     model = Product
-    fields = ('name', 'category',)
     form_class = ProductForm
     success_url = reverse_lazy('goods:index')
 
