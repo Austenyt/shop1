@@ -23,11 +23,8 @@ class Product(models.Model):
     creation_date = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     last_change_date = models.DateField(auto_now=True, verbose_name='Дата последнего изменения')
 
-    def current_version(self):
-        return self.version_set.filter(is_current=True).first()
-
-    def get_versions(self):
-        return Version.objects.filter(product=self)
+    # def current_version(self):
+    #     return self.version_set.filter(is_current=True).first()
 
     def __str__(self):
         return self.name

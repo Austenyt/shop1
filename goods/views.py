@@ -127,16 +127,16 @@ class ProductDetailView(DetailView):
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('goods:categories')
+    success_url = reverse_lazy('goods:category_detail')
 
 
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('goods:categories')
+    # success_url = reverse_lazy('goods:categories')
 
-    # def get_success_url(self):
-    #     return reverse('goods:categories', args=[self.kwargs.get('pk')])
+    def get_success_url(self):
+        return reverse('goods:product_update', args=[self.kwargs.get('pk')])
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
