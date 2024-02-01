@@ -23,6 +23,12 @@ class Product(models.Model):
     creation_date = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     last_change_date = models.DateField(auto_now=True, verbose_name='Дата последнего изменения')
 
+    def current_version(self):
+        return self.version_set.filter(is_current=True).first()
+
+    def get_versions(self):
+        return Version.objects.filter(product=self)
+
     def __str__(self):
         return self.name
 
@@ -49,10 +55,10 @@ class Blog(models.Model):
 
 
 class Version(models.Model):
-    title = models.CharField(max_length=250, verbose_name='Название версии')
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='Продукт')
+    version_name = models.CharField(max_length=250, verbose_name='Название версии')
     version_number = models.CharField(max_length=10, verbose_name='Номер версии', unique=True, blank=True, null=True)
-    current_version = models.BooleanField(default=True, verbose_name='Актуальна')
+    is_current = models.BooleanField(default=True, verbose_name='Актуальна')
 
     def __str__(self):
         return self.title

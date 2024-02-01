@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'goods',
-    'crispy_forms',
-    'crispy_bootstrap4',
 ]
 
 MIDDLEWARE = [
@@ -137,7 +135,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#django-crispy-forms
-CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-#End django-crispy-forms
+# #django-crispy-forms
+# CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
+# CRISPY_TEMPLATE_PACK = 'bootstrap4'
+# #End django-crispy-forms
