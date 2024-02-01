@@ -77,7 +77,7 @@ class CategoryListView(ListView):
 #         'object_list': Product.objects.filter(category_id=pk),
 #         'title': f'Категория с товарами - {category_item.name}'
 #     }
-#     return render(request, 'goods/product_list.html', context)
+#     return render(request, 'goods/category_detail.html', context)
 
 
 class CategoryDetailView(DetailView):
@@ -107,7 +107,7 @@ class ProductDetailView(DetailView):
             'product': product,
             'versions': versions,  # Передаем версии продукта в контекст
         }
-        return render(request, 'your_template.html', context)
+        return render(request, 'category_detail.html', context)
 
     # def get_queryset(self):
     #     queryset = super().get_queryset()
@@ -127,13 +127,12 @@ class ProductDetailView(DetailView):
 class ProductCreateView(CreateView):
     model = Product
     form_class = ProductForm
-    success_url = reverse_lazy('goods:category_detail')
+    success_url = reverse_lazy('goods:index')
 
 
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
-    # success_url = reverse_lazy('goods:categories')
 
     def get_success_url(self):
         return reverse('goods:product_update', args=[self.kwargs.get('pk')])
@@ -162,7 +161,7 @@ class ProductUpdateView(UpdateView):
 
 class ProductDeleteView(DeleteView):
     model = Product
-    successful_url = reverse_lazy('goods:categories')
+    successful_url = reverse_lazy('goods:contacts')
 
 # def product(request, pk):
 #     product_item = get_object_or_404(Product, pk=pk)
