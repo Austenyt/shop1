@@ -4,6 +4,7 @@ from django.core.mail import send_mail
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, UpdateView
 
+from config import settings
 from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
 
@@ -27,6 +28,7 @@ class RegisterView(CreateView):
         send_mail(
             subject='Поздравляем с регистрацией',
             message='Вы зарегистрировались на нашей платформе, добро пожаловать!',
+            from_email=settings.EMAIL_HOST_USER,
             recipient_list=[new_user.email]
         )
         return super().form_valid(form)
