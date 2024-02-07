@@ -121,7 +121,7 @@ class ProductDetailView(DetailView):
     #     context_data['category_pk'] = category_item.pk,
     #     context_data['title'] = f'Категория с товарами - {category_item.name}'
 
-        # return context_data
+    # return context_data
 
 
 class ProductCreateView(CreateView):
@@ -133,6 +133,10 @@ class ProductCreateView(CreateView):
 class ProductUpdateView(UpdateView):
     model = Product
     form_class = ProductForm
+
+    def __init__(self, **kwargs):
+        super().__init__(kwargs)
+        self.object = None
 
     def get_success_url(self):
         return reverse('goods:product_update', args=[self.kwargs.get('pk')])
@@ -151,6 +155,8 @@ class ProductUpdateView(UpdateView):
     def form_valid(self, form):
         context_data = self.get_context_data()
         formset = context_data['formset']
+        self.object = form.save(commit=False)
+        self.object.author = self.request.user  # Привязка продукта к авторизованному пользователю
         self.object = form.save()
 
         if formset.is_valid():
@@ -162,6 +168,7 @@ class ProductUpdateView(UpdateView):
 class ProductDeleteView(DeleteView):
     model = Product
     successful_url = reverse_lazy('goods:contacts')
+
 
 # def product(request, pk):
 #     product_item = get_object_or_404(Product, pk=pk)
@@ -184,6 +191,7 @@ class BlogCreateView(CreateView):
 class BlogUpdateView(UpdateView):
     model = Blog
     fields = ('title', 'body', 'preview',)
+
     # success_url = reverse_lazy('goods:blog_view')
 
     def form_valid(self, form):

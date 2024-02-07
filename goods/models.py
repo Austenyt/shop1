@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 
@@ -14,6 +15,9 @@ class Category(models.Model):
         verbose_name_plural = 'Категории'
 
 
+User = get_user_model()
+
+
 class Product(models.Model):
     name = models.CharField(max_length=150, verbose_name='Название')
     description = models.CharField(max_length=150, verbose_name='Описание')
@@ -22,6 +26,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     creation_date = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     last_change_date = models.DateField(auto_now=True, verbose_name='Дата последнего изменения')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, default=1, verbose_name='Автор')
 
     def current_version(self):
         return self.version_set.filter(is_current=True).first()
