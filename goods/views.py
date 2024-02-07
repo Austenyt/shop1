@@ -1,3 +1,5 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
@@ -21,13 +23,6 @@ class IndexView(TemplateView):
         return context_data
 
 
-# def index(request):
-#     context = {
-#         'object_list': Category.objects.all()[:3],
-#         'title': 'Магазин для фанатов кантри'
-#     }
-#     return render(request, 'goods/index.html', context)
-
 class ContactsView(View):
     template_name = 'goods/contacts.html'
 
@@ -43,41 +38,11 @@ class ContactsView(View):
         return render(request, self.template_name, {'title': 'Контакты'})
 
 
-# def contacts(request):
-#     if request.method == 'POST':
-#         name = request.POST.get('name')
-#         email = request.POST.get('email')
-#         message = request.POST.get('message')
-#         print(f'{name} ({email}): {message}')
-#
-#     context = {
-#         'title': 'Контакты'
-#     }
-#     return render(request, 'goods/contacts.html', context)
-
-
-# def categories(request):
-#     context = {
-#         'object_list': Category.objects.all(),
-#         'title': 'Категории'
-#     }
-#     return render(request, 'goods/category_list.html', context)
-
-
 class CategoryListView(ListView):
     model = Category
     extra_context = {
         'title': 'Категории'
     }
-
-
-# def category_goods(request, pk):
-#     category_item = Category.objects.get(pk=pk)
-#     context = {
-#         'object_list': Product.objects.filter(category_id=pk),
-#         'title': f'Категория с товарами - {category_item.name}'
-#     }
-#     return render(request, 'goods/category_detail.html', context)
 
 
 class CategoryDetailView(DetailView):
@@ -109,34 +74,30 @@ class ProductDetailView(DetailView):
         }
         return render(request, 'category_detail.html', context)
 
-    # def get_queryset(self):
-    #     queryset = super().get_queryset()
-    #     queryset = queryset.filter(category_id=self.kwargs.get('pk'))
-    #     return queryset
 
-    # def get_context_data(self, *args, **kwargs):
-    #     context_data = super().get_context_data(*args, **kwargs)
-    #
-    #     category_item = Category.objects.get(pk=self.kwargs.get('pk'))
-    #     context_data['category_pk'] = category_item.pk,
-    #     context_data['title'] = f'Категория с товарами - {category_item.name}'
-
-    # return context_data
-
-
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     model = Product
     form_class = ProductForm
     success_url = reverse_lazy('goods:index')
 
+    def test_func(self):
+        return self.request.user.is_authenticated  # Метод для определения авторизации пользователя
 
-class ProductUpdateView(UpdateView):
+    def handle_no_permission(self):
+        return LoginView.as_view(template_name='users/login.html')(self.request)  # Метод для возврата пользователя
+        # на страницу авторизации при попытке доступа без авторизации
+
+
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
 
-    def __init__(self, **kwargs):
-        super().__init__(kwargs)
-        self.object = None
+    def test_func(self):
+        return self.request.user.is_authenticated  # Метод для определения авторизации пользователя
+
+    def handle_no_permission(self):
+        return LoginView.as_view(template_name='users/login.html')(self.request)  # Метод для возврата пользователя
+        # на страницу авторизации при попытке доступа без авторизации
 
     def get_success_url(self):
         return reverse('goods:product_update', args=[self.kwargs.get('pk')])
@@ -155,8 +116,6 @@ class ProductUpdateView(UpdateView):
     def form_valid(self, form):
         context_data = self.get_context_data()
         formset = context_data['formset']
-        self.object = form.save(commit=False)
-        self.object.author = self.request.user  # Привязка продукта к авторизованному пользователю
         self.object = form.save()
 
         if formset.is_valid():
@@ -165,14 +124,16 @@ class ProductUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     model = Product
     successful_url = reverse_lazy('goods:contacts')
 
+    def test_func(self):
+        return self.request.user.is_authenticated  # Метод для определения авторизации пользователя
 
-# def product(request, pk):
-#     product_item = get_object_or_404(Product, pk=pk)
-#     return render(request, 'goods/product_detail.html', {'product': product_item})
+    def handle_no_permission(self):
+        return LoginView.as_view(template_name='users/login.html')(self.request)  # Метод для возврата пользователя
+        # на страницу авторизации при попытке доступа без авторизации
 
 
 class BlogCreateView(CreateView):

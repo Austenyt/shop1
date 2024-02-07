@@ -12,12 +12,12 @@ from users.forms import UserRegisterForm, UserProfileForm
 from users.models import User
 
 
-class LoginView(BaseLoginView):
-    template_name = 'users/login.html'
-
-
-class LogoutView(BaseLogoutView):
-    template_name = 'users/login.html'
+# class LoginView(BaseLoginView):
+#     template_name = 'users/login.html'
+#
+#
+# class LogoutView(BaseLogoutView):
+#     template_name = 'users/login.html'
 
 
 class RegisterView(CreateView):
