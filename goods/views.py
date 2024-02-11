@@ -1,4 +1,4 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.forms import inlineformset_factory
 from django.shortcuts import render, get_object_or_404, redirect
@@ -88,9 +88,10 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
         # на страницу авторизации при попытке доступа без авторизации
 
 
-class ProductUpdateView(LoginRequiredMixin, UpdateView):
+class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
+    permission_required = ['goods.can_unpublish_product', 'can_change_product_description', 'can_change_product_category']
 
     def test_func(self):
         return self.request.user.is_authenticated  # Метод для определения авторизации пользователя
@@ -124,7 +125,7 @@ class ProductUpdateView(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
 
-class ProductDeleteView(LoginRequiredMixin, DeleteView):
+class ProductDeleteView(LoginRequiredMixin, PermissionRequiredMixin, DeleteView):
     model = Product
     successful_url = reverse_lazy('goods:contacts')
 

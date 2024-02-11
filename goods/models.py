@@ -1,4 +1,6 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
 
@@ -27,6 +29,7 @@ class Product(models.Model):
     creation_date = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     last_change_date = models.DateField(auto_now=True, verbose_name='Дата последнего изменения')
     author = models.ForeignKey(User, on_delete=models.CASCADE, default=1, verbose_name='Автор')
+    is_published = models.BooleanField(default=True, verbose_name='опубликовано')
 
     def current_version(self):
         return self.version_set.filter(is_current=True).first()
@@ -37,6 +40,44 @@ class Product(models.Model):
     class Meta:
         verbose_name = 'Товар'
         verbose_name_plural = 'Товары'
+        permissions = [
+            (
+                'can_unpublish_product',
+                 'Can unpublish product',
+            ),
+            (
+                'can_change_product_description',
+                'Can change product description',
+            ),
+            (
+                'can_change_product_category',
+                'Can change product category',
+            ),
+        ]
+
+    def assign_unpublish_permission(self, user):
+        content_type = ContentType.objects.get_for_model(Product)
+        permission = Permission.objects.get(
+            codename="can_unpublish_product",
+            content_type=content_type,
+        )
+        user.user_permissions.add(permission)
+
+    def assign_change_product_description(self, user):
+        content_type = ContentType.objects.get_for_model(Product)
+        permission = Permission.objects.get(
+            codename="can_change_product_description",
+            content_type=content_type,
+        )
+        user.user_permissions.add(permission)
+
+    def assign_change_product_category(self, user):
+        content_type = ContentType.objects.get_for_model(Product)
+        permission = Permission.objects.get(
+            codename="can_change_product_category",
+            content_type=content_type,
+        )
+        user.user_permissions.add(permission)
 
 
 class Blog(models.Model):
