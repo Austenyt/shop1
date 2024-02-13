@@ -148,6 +148,7 @@ LOGIN_URL = '/users/'
 
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'cadpost123@yandex.ru'
-EMAIL_HOST_PASSWORD = 'risstmvrfyksdpcn'
+EMAIL_HOST_USER = 'fuckup@oscarbot.ru'
+EMAIL_HOST_PASSWORD = 'AsTSNVv7pun9'
+# EMAIL_HOST_PASSWORD = 'risstmvrfyksdpcn'
 EMAIL_USE_SSL = True
