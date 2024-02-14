@@ -45,8 +45,14 @@ class CategoryListView(ListView):   # Категории в главном вы�
     }
 
 
-class ProductListView(DetailView):   # Cписок товаров при нажатии "Открыть" в списке категорий
+class CategoryDetailView(DetailView):   # Cписок товаров при нажатии "Открыть" в списке категорий
     model = Category
+
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            id=self.kwargs.get('pk'),
+            product_owner_id=self.request.user
+        )
 
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)
@@ -58,8 +64,7 @@ class ProductListView(DetailView):   # Cписок товаров при наж�
         return context_data
 
 
-
-class ProductDetailView(LoginRequiredMixin, DetailView):
+class ProductDetailView(DetailView):
     model = Product
 
     def product_detail_view(request, product_id):
