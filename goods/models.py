@@ -3,6 +3,8 @@ from django.contrib.auth.models import Permission
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 
+from config import settings
+
 
 class Category(models.Model):
     name = models.CharField(max_length=150, verbose_name='Название')
@@ -28,8 +30,11 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
     creation_date = models.DateField(auto_now_add=True, verbose_name='Дата создания')
     last_change_date = models.DateField(auto_now=True, verbose_name='Дата последнего изменения')
-    author = models.ForeignKey(User, on_delete=models.CASCADE, default=1, verbose_name='Автор')
+    # author = models.ForeignKey(User, on_delete=models.CASCADE, default=1, verbose_name='Автор')
     is_published = models.BooleanField(default=True, verbose_name='опубликовано')
+
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True,
+                              verbose_name='владелец')
 
     def current_version(self):
         return self.version_set.filter(is_current=True).first()
@@ -43,7 +48,7 @@ class Product(models.Model):
         permissions = [
             (
                 'can_unpublish_product',
-                 'Can unpublish product',
+                'Can unpublish product',
             ),
             (
                 'can_change_product_description',

@@ -11,7 +11,7 @@ from goods.forms import VersionForm, ProductForm
 from goods.models import Category, Product, Blog, Version
 
 
-class IndexView(TemplateView):
+class IndexView(TemplateView):      # Главная страница
     template_name = 'goods/index.html'
     extra_context = {
         'title': 'Магазин для фанатов кантри'
@@ -38,14 +38,14 @@ class ContactsView(View):
         return render(request, self.template_name, {'title': 'Контакты'})
 
 
-class CategoryListView(ListView):
+class CategoryListView(ListView):   # Категории в главном выпадающем меню
     model = Category
     extra_context = {
         'title': 'Категории'
     }
 
 
-class CategoryDetailView(DetailView):
+class ProductListView(DetailView):   # Cписок товаров при нажатии "Открыть" в списке категорий
     model = Category
 
     def get_context_data(self, *args, **kwargs):
@@ -58,11 +58,8 @@ class CategoryDetailView(DetailView):
         return context_data
 
 
-class ProductListView(ListView):
-    model = Product
 
-
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
 
     def product_detail_view(request, product_id):
