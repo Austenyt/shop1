@@ -25,6 +25,7 @@
                 </div>
             </div>
         </div>
+        {% if perms.goods.change_product %}
         <div class="col-6">
             <div class="card">
                 <div class="card-header">
@@ -41,6 +42,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 </form>
 {% endblock %}

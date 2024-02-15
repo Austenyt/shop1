@@ -45,27 +45,27 @@ class CategoryListView(ListView):   # Категории в главном вы�
     }
 
 
-class CategoryDetailView(DetailView):   # Cписок товаров при нажатии "Открыть" в списке категорий
-    model = Category
+class ProductListView(LoginRequiredMixin, ListView):   # Cписок товаров при нажатии "Открыть" в списке категорий
+    model = Product
 
-    def get_queryset(self):
-        return super().get_queryset().filter(
-            id=self.kwargs.get('pk'),
-            product_owner_id=self.request.user
-        )
+    # def get_queryset(self):
+    #     return super().get_queryset().filter(
+    #         category_id=self.kwargs.get('pk'),
+    #         owner=self.request.user
+    #     )
 
     def get_context_data(self, *args, **kwargs):
         context_data = super().get_context_data(*args, **kwargs)
-
-        product_items = Product.objects.filter(category=self.object)
-        context_data['product_items'] = product_items
-        context_data['title'] = f'Категория с товарами - {self.object.name}'
-
+        category_item = Category.objects.get(pk=self.kwargs.get('pk'))
+        context_data['category_pk'] = category_item.pk
+        context_data['title'] = f'Категория с товарами {category_item.name}'
         return context_data
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     model = Product
+    template_name = 'goods/product_detail.html'
+    context_object_name = 'product'
 
     def product_detail_view(request, product_id):
         product = Product.objects.get(pk=product_id)
@@ -74,7 +74,7 @@ class ProductDetailView(DetailView):
             'product': product,
             'versions': versions,  # Передаем версии продукта в контекст
         }
-        return render(request, 'category_detail.html', context)
+        return render(request, 'product_list.html', context)
 
 
 class ProductCreateView(LoginRequiredMixin, CreateView):
@@ -93,7 +93,7 @@ class ProductCreateView(LoginRequiredMixin, CreateView):
 class ProductUpdateView(LoginRequiredMixin, PermissionRequiredMixin, UpdateView):
     model = Product
     form_class = ProductForm
-    permission_required = ['goods.can_unpublish_product', 'can_change_product_description', 'can_change_product_category']
+    permission_required = ['goods.can_unpublish_product', 'goods.can_change_product_description', 'goods.can_change_product_category']
 
     def test_func(self):
         return self.request.user.is_authenticated  # Метод для определения авторизации пользователя

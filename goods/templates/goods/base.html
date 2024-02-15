@@ -28,7 +28,7 @@
                     <ul class="list-unstyled">
                         <li><a href="{% url 'goods:index' %}" class="text-white">Главная</a></li>
                         <li><a href="{% url 'goods:contacts' %}" class="text-white">Контакты</a></li>
-                        <li><a href="{% url 'goods:categories' %}" class="text-white">Категории</a></li>
+                        <li><a href="{% url 'goods:category_list' %}" class="text-white">Категории</a></li>
                         <li><a href="{% url 'goods:blog_list' %}" class="text-white">Блог</a></li>
                         {% if user.is_authenticated %}
                         <li><a href="{% url 'users:profile' %}" class="text-white">Профиль</a></li>

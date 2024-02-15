@@ -1,18 +1,18 @@
 from django.urls import path
 
 from goods.apps import GoodsConfig
-from goods.views import IndexView, CategoryListView, ProductCreateView, \
+from goods.views import IndexView, CategoryListView, ProductDetailView, ProductCreateView, \
     ProductUpdateView, \
     ProductDeleteView, BlogListView, ContactsView, BlogCreateView, BlogUpdateView, BlogDetailView, \
-    BlogDeleteView, ProductDetailView, CategoryDetailView
+    BlogDeleteView, ProductListView
 
 app_name = GoodsConfig.name
 
 urlpatterns = [
     path('', IndexView.as_view(), name='index'),
     path('contacts/', ContactsView.as_view(), name='contacts'),
-    path('categories/', CategoryListView.as_view(), name='categories'),
-    path('categories/<int:pk>/', CategoryDetailView.as_view(), name='category_detail'),
+    path('categories/', CategoryListView.as_view(), name='category_list'),
+    path('categories/<int:pk>/', ProductListView.as_view(), name='product_list'),
     path('goods/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),
     path('goods/create', ProductCreateView.as_view(), name='product_create'),
     path('goods/update/<int:pk>/', ProductUpdateView.as_view(), name='product_update'),
