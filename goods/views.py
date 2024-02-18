@@ -10,6 +10,7 @@ from django.views.generic import ListView, CreateView, UpdateView, TemplateView,
 
 from goods.forms import VersionForm, ProductForm
 from goods.models import Category, Product, Blog, Version
+from goods.services import get_categories
 
 
 class IndexView(TemplateView):      # Главная страница
@@ -44,6 +45,11 @@ class CategoryListView(ListView):   # Категории в главном вы�
     extra_context = {
         'title': 'Категории'
     }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['categories'] = get_categories(self.object.pk)
+        return context
 
 
 class ProductListView(LoginRequiredMixin, ListView):   # Cписок товаров при нажатии "Открыть" в списке категорий
